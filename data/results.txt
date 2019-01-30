@@ -1,0 +1,6 @@
+Number of PSUs used:	2
+
+PSUs used:
+
+psu1:	i1 i4 i8
+psu2:	i2 i3 i5

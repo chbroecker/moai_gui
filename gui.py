@@ -1,10 +1,13 @@
 import sys
+from warehouse import Warehouse
 from PySide2 import QtCore, QtWidgets, QtGui 
-from PySide2.QtWidgets import QGridLayout, QRadioButton, QVBoxLayout, QGroupBox, QTableWidget, QFrame, QSpinBox
+from PySide2.QtWidgets import QGridLayout, QRadioButton, QVBoxLayout, QGroupBox, QFrame, QSpinBox
 
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
+
+        self.wh = Warehouse()
 
         self.button_load_warehouse_info = QtWidgets.QPushButton("Load Warehouse information")
         self.button_load_order_info = QtWidgets.QPushButton("Load Order")
@@ -34,6 +37,7 @@ class MyWidget(QtWidgets.QWidget):
 
         self.button_load_warehouse_info.clicked.connect(self.open_warehouse_info)
         self.button_load_order_info.clicked.connect(lambda:self.open_warehouse_order(self.button_load_order_info))
+        self.button_compute.clicked.connect(self.compute)
 
     def createSearchAlgoSelect(self):
         self.algorithm_select = QGroupBox()
@@ -98,7 +102,7 @@ class MyWidget(QtWidgets.QWidget):
     def createResultGroupBox(self):
         self.result_textEdit = QtWidgets.QTextEdit()
         self.result_textEdit.setText(self.selected_algorithm)
-        #result_textEdit.setReadOnly(True)
+        self.result_textEdit.setReadOnly(True)
 
     def open_warehouse_info(self):
         name, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
@@ -109,6 +113,8 @@ class MyWidget(QtWidgets.QWidget):
             with file:
                 text = file.read()
                 self.warehouse_info.setText(text)
+                self.wh.init_warehouse_info(text)
+
         except FileNotFoundError:
             pass
 
@@ -121,8 +127,15 @@ class MyWidget(QtWidgets.QWidget):
             with file:
                 text = file.read()
                 self.warehouse_order.setText(text.replace(' ', '\n'))
+                self.wh.init_warehouse_order(text)
+
         except FileNotFoundError:
             pass
+    
+    def compute(self):
+        self.wh.preprocess()
+
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

@@ -32,11 +32,8 @@ class MyWidget(QtWidgets.QWidget):
         main_layout.addWidget(self.result_textEdit, 4, 2)
         self.setLayout(main_layout)
 
-        self.button_load_warehouse_info.clicked.connect(self.open_file)
-        self.button_load_order_info.clicked.connect(lambda:self.open_file2(self.button_load_order_info))
-
-        self.dummy_open()
-        self.dummy_open2()
+        self.button_load_warehouse_info.clicked.connect(self.open_warehouse_info)
+        self.button_load_order_info.clicked.connect(lambda:self.open_warehouse_order(self.button_load_order_info))
 
     def createSearchAlgoSelect(self):
         self.algorithm_select = QGroupBox()
@@ -103,38 +100,29 @@ class MyWidget(QtWidgets.QWidget):
         self.result_textEdit.setText(self.selected_algorithm)
         #result_textEdit.setReadOnly(True)
 
-    def dummy_open(self):
-        file = open('/Users/chbroecker/projects/moai_gui/data/warehouseinfo.txt', 'r')
-
-        with file:
-            text = file.read()
-            self.warehouse_info.setText(text)
-
-    def dummy_open2(self):
-        file = open('/Users/chbroecker/projects/moai_gui/data/order.txt', 'r')
-
-        with file:
-            text = file.read()
-            self.warehouse_order.setText(text)
-
-    def open_file(self):
+    def open_warehouse_info(self):
         name, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
         
-        file = open(name, 'r')
+        try:
+            file = open(name, 'r')
 
-        with file:
-            text = file.read()
-            self.warehouse_info.setText(text)
+            with file:
+                text = file.read()
+                self.warehouse_info.setText(text)
+        except FileNotFoundError:
+            pass
 
-    def open_file2(self, button):
+    def open_warehouse_order(self, button):
         name, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')
         
-        print(button.text())
-        file = open(name, 'r')
+        try:
+            file = open(name, 'r')
 
-        with file:
-            text = file.read()
-            self.warehouse_order.setText(text)
+            with file:
+                text = file.read()
+                self.warehouse_order.setText(text.replace(' ', '\n'))
+        except FileNotFoundError:
+            pass
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

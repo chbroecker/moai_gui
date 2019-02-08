@@ -29,3 +29,12 @@ Filtered PSUs:
 ```
 
 The resulting Filtered PSU has a lot less items and should therefore be a lot more suitable for the search algorithms
+
+## Current state of GUI
+
+### TODO
+* radiobuttons still don't work
+* Help Button has no functionality yet
+* Credits Button has no functionality yet
+
+![Gui Picture](data/imgs/gui.png)
